@@ -12,7 +12,7 @@ def home():
 @app.route("/hello")
 def hello():
 	return jsonify({
-		"message": "Hello from the Flask api!"
+		"message": "Hello from the Flask API!"
 	})
 
 @app.route("/welcome")
