@@ -6,7 +6,7 @@ app = Flask(__name__)
 def home():
 	return jsonify({
 		"status": "online",
-		"server": "My API",
+		"server": "My Flask API",
 	})
 
 @app.route("/hello")
