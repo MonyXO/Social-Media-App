@@ -1,15 +1,7 @@
 from flask import Flask, jsonify
-import mysql.connector
+from db import get_db_connection
 
 app = Flask(__name__)
-
-def get_db():
-	return mysql.connector.connect(
-		host="localhost",
-		user="admin_mony",
-		password="$Mony5040$",
-		database="social_media_app"
-	)
 
 @app.route("/")
 def home():
@@ -20,7 +12,7 @@ def home():
 
 @app.route("/user-test/<int:id>")
 def get_user(id):
-	db = get_db()
+	db = get_db_connection()
 	cursor = db.cursor(dictionary=True)
 	cursor.execute(
 		"SELECT * FROM users WHERE id=%s",
