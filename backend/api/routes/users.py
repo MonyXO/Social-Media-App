@@ -18,9 +18,9 @@ def register_routes(app):
 		    "SELECT * FROM users WHERE id=%s",
 		    (id,)
 	    )
-	user = cursor.fetchone()
-	cursor.close()
-	db.close()
+	    user = cursor.fetchone()
+	    cursor.close()
+	    db.close()
 
 	if user is None:
 		return jsonify({"error": "User not found"}), 404
