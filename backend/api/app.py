@@ -27,6 +27,9 @@ def get_user(id):
 	user = cursor.fetchone()
 	cursor.close()
 
+	if user is None:
+		return jsonify({"error": "User not found"}), 404
+
 	return jsonify(user)
 
 if __name__ == '__main__':
