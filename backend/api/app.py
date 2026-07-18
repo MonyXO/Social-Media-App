@@ -3,12 +3,13 @@ import mysql.connector
 
 app = Flask(__name__)
 
-db = mysql.connector.connect(
-	host="localhost",
-	user="admin_mony",
-	password="$Mony5040$",
-	database="social_media_app"
-)
+def get_db():
+	return mysql.connector.connect(
+		host="localhost",
+		user="admin_mony",
+		password="$Mony5040$",
+		database="social_media_app"
+	)
 
 @app.route("/")
 def home():
@@ -19,6 +20,7 @@ def home():
 
 @app.route("/user-test/<int:id>")
 def get_user(id):
+	db = get_db()
 	cursor = db.cursor(dictionary=True)
 	cursor.execute(
 		"SELECT * FROM users WHERE id=%s",
@@ -26,10 +28,10 @@ def get_user(id):
 	)
 	user = cursor.fetchone()
 	cursor.close()
+	db.close()
 
 	if user is None:
 		return jsonify({"error": "User not found"}), 404
-
 	return jsonify(user)
 
 if __name__ == '__main__':
