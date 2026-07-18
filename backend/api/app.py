@@ -4,7 +4,7 @@ import mysql.connector
 app = Flask(__name__)
 
 db = mysql.connector.connect(
-	host="10.0.0.5",
+	host="10.0.0.5:5000",
 	user="admin_mony",
 	password="$Mony5040$",
 	database="social_media_app"
@@ -26,3 +26,9 @@ def get_user():
 
 	return jsonify(users)
 
+if __name__ == '__main__':
+	app.run(
+		host="0.0.0.0",
+		port=5000,
+		debug=True
+	)
