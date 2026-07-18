@@ -17,14 +17,17 @@ def home():
 		"server": "My Flask API",
 	})
 
-@app.route("/user-test")
-def get_user():
+@app.route("/user-test/<int:id>")
+def get_user(id):
 	cursor = db.cursor(dictionary=True)
-	cursor.execute("SELECT * FROM users")
-	users = cursor.fetchall()
+	cursor.execute(
+		"SELECT * FROM users WHERE id=%s",
+		(id,)
+	)
+	user = cursor.fetchone()
 	cursor.close()
 
-	return jsonify(users)
+	return jsonify(user)
 
 if __name__ == '__main__':
 	app.run(
