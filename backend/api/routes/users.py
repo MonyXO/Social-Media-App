@@ -22,6 +22,6 @@ def register_routes(app):
 	    cursor.close()
 	    db.close()
 
-	if user is None:
-		return jsonify({"error": "User not found"}), 404
-	return jsonify(user)
+	    if user is None:
+		    return jsonify({"error": "User not found"}), 404
+	    return jsonify(user)
