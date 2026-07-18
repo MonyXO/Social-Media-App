@@ -1,5 +1,5 @@
 from flask import Flask
-from routes.routes import register_routes
+from routes.users import register_routes
 
 app = Flask(__name__)
 
