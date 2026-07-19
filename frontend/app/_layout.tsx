@@ -6,7 +6,14 @@ export default function RootLayout() {
     return (
         <React.Fragment>
             <StatusBar style="auto" />
-            <Stack />
+            <Stack>
+                <Stack.Screen
+                    name="(protected)"
+                    options={{
+                        headerShown: false,
+                    }}
+                />
+            </Stack>
         </React.Fragment>
     );
 }
