@@ -1,13 +1,13 @@
 from flask import jsonify 
 from db import get_db_connection
-from utils import generate_token
+from utils import *
 ##	from db import auth_db
 
 def register_routes(app):
 
     @app.route("/")
     def home():
-		token = generate_token(32)
+		token.utils = generate_token(32)
 	    return jsonify({
 		    "status": "online",
 		    "server": "My Flask API",
