@@ -5,14 +5,14 @@ from utils import generate_token
 
 def register_routes(app):
 
-    @app.route("/")
-    def home():
+	@app.route("/")
+	def home():
 		token = generate_token(32)
-	    return jsonify({
-		    "status": "online",
-		    "server": "My Flask API",
+		return jsonify({
+			"status": "online",
+			"server": "My Flask API",
 			"token": token,
-	    })
+		})
 
 	@app.route("/login")
 	def login():
