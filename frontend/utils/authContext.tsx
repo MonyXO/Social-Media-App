@@ -1,13 +1,14 @@
 import { SplashScreen, useRouter } from "expo-router";
 import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import api from "@/api/api"
 
 SplashScreen.preventAutoHideAsync();
 
 type AuthState = {
     isLoggedIn: boolean;
     isReady: boolean;
-    logIn: () => void;
+    logIn: (email: string, password: string) => Promise<boolean>;
     logOut: () => void;
 };
 
@@ -16,7 +17,9 @@ const authStorageKey = "auth-key";
 export const AuthContext = createContext<AuthState>({
     isLoggedIn: false,
     isReady: false,
-    logIn: () => {},
+
+    // Adjust login below, keep it commented out until time to test
+    logIn: async() => false,
     logOut: () => {},
 })
 
@@ -35,11 +38,31 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
     };
 
-    const logIn = () => {
-        setIsLoggedIn(true);
-        storeAuthState({ isLoggedIn: true });
-        router.replace("/");
-    }
+    // Adjust login below, keep it commented out until time to test
+    const logIn = async (email: string, password: string): Promise<boolean> => {  
+
+        try {
+
+            const response = await api.post("/login", {
+                email,
+                password,
+            });
+
+            // This is the token we get back from the server --
+            const token = response.data.token;
+            await AsyncStorage.setItem("token", token);
+
+            // Set...
+            setIsLoggedIn(true);
+            router.replace("/");
+
+            return true
+
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
+    };
 
     const logOut = () => {
         setIsLoggedIn(false)
@@ -52,13 +75,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
             // simulate a delay
             await new Promise((res) => setTimeout(() => res(null), 1000));
             try {
-                const value = await AsyncStorage.getItem(authStorageKey);
-                if (value !== null) {
-                    const auth = JSON.parse(value);
-                    setIsLoggedIn(auth.isLoggedIn);
+                const value = await AsyncStorage.getItem("token");
+                if (value) {
+                    setIsLoggedIn(true);
+                } else {
+                    setIsLoggedIn(false);
                 }
             } catch (error) {
                 console.log("Error fetching from storage", error);
+                setIsLoggedIn(false);
             }
             setIsReady(true);
         }
