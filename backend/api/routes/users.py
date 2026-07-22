@@ -7,7 +7,7 @@ def register_routes(app):
 
     @app.route("/")
     def home():
-		token.utils = generate_token(32)
+		token = generate_token(32)
 	    return jsonify({
 		    "status": "online",
 		    "server": "My Flask API",
