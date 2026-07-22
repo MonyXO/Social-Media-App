@@ -3,12 +3,11 @@ import { useContext } from "react";
 import { Button, Text, View } from "react-native";
 
 
-export default function LoginScreen() {
+export default function SignUpScreen() {
     const authContext = useContext(AuthContext);
     return (
         <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Text style={{ fontSize: 24 }}>Login Screen</Text>
-            <Button title="Log In!" onPress={authContext.logIn}/>
+            <Text style={{ fontSize: 24 }}>SignUpScreen Screen</Text>
         </View>
     );
 }
