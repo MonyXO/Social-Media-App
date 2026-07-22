@@ -40,9 +40,9 @@ def register_routes(app):
 			print('commited')
 			return make_response(jsonify( { 'Token': token } ), 200)
 	"""
-	
-    @app.route("/user-test/<int:id>")
-    def get_user(id):
+
+	@app.route("/user-test/<int:id>")
+	def get_user(id):
 	    db = get_db_connection()
 	    cursor = db.cursor(dictionary=True)
 	    cursor.execute(
