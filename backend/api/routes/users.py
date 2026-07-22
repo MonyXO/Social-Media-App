@@ -1,6 +1,6 @@
 from flask import jsonify 
 from db import get_db_connection
-from utils import *
+from utils import generate_token
 ##	from db import auth_db
 
 def register_routes(app):
@@ -32,7 +32,7 @@ def register_routes(app):
 
 		if uID is not None:
 			## Generate token
-			token = utils.gen-token(32)
+			token = generate_token(32)
 			app_cursor.execute('INSERT INTO tokens(uID, token, ranks)values(%s, %s, 1);', (uID, token))
 			print(token)
 			app_db.commit()
