@@ -1,5 +1,6 @@
 from flask import jsonify 
 from db import get_db_connection
+from utils import generate_token
 ##	from db import auth_db
 
 def register_routes(app):
