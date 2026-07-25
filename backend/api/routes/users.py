@@ -43,7 +43,7 @@ def register_routes(app):
 			# Generate Token
 			token = generate_token(32)
 			cursor.execute(
-				"INSERT INTO auth (user_id, token, user_rank) VALUES (%s, %s, 1)",
+				"INSERT INTO auth (user_id, token, user_rank, expires_at) VALUES (%s, %s, 1, DATE_ADD(NOW(), INTERVAL 30 DAY))",
 				(
 					user["id"],
 					token
