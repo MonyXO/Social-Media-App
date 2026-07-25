@@ -54,7 +54,7 @@ def register_routes(app):
 				"success": True,
 				"user ID": user["id"],
 				"token": token,	
-			}, 401
+			}, 200
 
 		# user_id = user["id"]
 
