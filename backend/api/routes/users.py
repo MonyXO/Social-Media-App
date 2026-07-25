@@ -40,6 +40,11 @@ def register_routes(app):
 
 		if user is not None:
 
+			cursor.execute(
+				"DELETE FROM auth WHERE user_id = %s",
+				(user["id"],)
+			)
+
 			# Generate Token
 			token = generate_token(32)
 			cursor.execute(
@@ -50,6 +55,10 @@ def register_routes(app):
 				)
 			)
 			db.commit()
+
+			db.close()
+			cursor.close()
+			
 			return jsonify({
 				"success": True,
 				"user ID": user["id"],
@@ -62,6 +71,36 @@ def register_routes(app):
 			"success": False,
 			"message": "invalid email or password"
 		}, 401)
+
+	@app.route("/logout", methods=["POST"])
+	def logout():
+		auth_header = request.headers.get("Authorization")
+
+		if not auth_header or not auth_header.startswith("Bearer "):
+			return jsonify({
+				"success": False,
+				"message": "Missing token"
+			}), 401
+
+		token = auth_header.split(" ", 1)[1]
+
+		db = get_db_connection()
+		cursor = db.cursor()
+
+		cursor.execute(
+			"DELETE FROM auth WHERE token = %s",
+			(token,)
+		)
+
+		db.commit()
+
+		cursor.close()
+		db.close()
+
+		return jsonify({
+			"success": True,
+			"message": "Logged out successfully"
+		})
 
 	@app.route("/user-test/<int:id>")
 	def get_user(id):

@@ -69,6 +69,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     };
 
     const logOut = async () => {
+
+        const token = await AsyncStorage.getItem("token");
+
+        await api.post("/logout",
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
         await AsyncStorage.removeItem("token");
         setIsLoggedIn(false)
         router.replace("/login")
