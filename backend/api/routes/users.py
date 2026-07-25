@@ -17,12 +17,24 @@ def register_routes(app):
 
 	@app.route("/login", methods=["POST"])
 	def login():
+
+		# Recieve data from front end - In this case the email and password
 		data = request.get_json()
 
+		# store data in variables
 		email = data["email"]
 		password = data["password"]
 
-		print(email + '\n' + password)
+		# print(email + '\n' + password)
+		# Open up a connection to the database to look up using frontend data
+		db = get_db_connection()
+		cursor = db.cursor(dictionary=True)
+		cursor.execute(
+			"SELECT id FROM users WHERE email = %s AND password = %s",
+			(email, password,)
+		)
+		user = cursor.fetchone()
+		print(user)
 
 		return jsonify({
 			"success": True,
