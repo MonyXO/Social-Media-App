@@ -30,8 +30,11 @@ def register_routes(app):
 		db = get_db_connection()
 		cursor = db.cursor(dictionary=True)
 		cursor.execute(
-			"SELECT id FROM users WHERE email = %s AND password = %s",
-			(email, password,)
+			"SELECT id FROM users WHERE email = %s AND password_hash = %s",
+			(
+				email, 
+				password
+			)
 		)
 		user = cursor.fetchone()
 		print(user)
