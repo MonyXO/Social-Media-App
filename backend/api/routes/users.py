@@ -24,7 +24,9 @@ def register_routes(app):
 
 		print(email + '\n' + password)
 
-		return {"success": True}
+		return jsonify({
+			"success": True,
+		})
 
 	#	## My solution ##
 
