@@ -25,23 +25,23 @@ def register_routes(app):
 		print(email + '\n' + password)
 
 		return {"success": True}
-"""
-		## My solution ##
+
+	#	## My solution ##
 
 		## auth_cursor is the auth db, app_cursor is app db
-		auth_cursor.execute('SELECT userID FROM users WHERE uUsername=%s and uPassword=%s;', (email, password))
-		uID = auth_cursor.fetchone()[]
-		print(uID)
+	#	auth_cursor.execute('SELECT userID FROM users WHERE uUsername=%s and uPassword=%s;', (email, password))
+	#	uID = auth_cursor.fetchone()[]
+	#	print(uID)
 
-		if uID is not None:
+	#	if uID is not None:
 			## Generate token
-			token = generate_token(32)
-			app_cursor.execute('INSERT INTO tokens(uID, token, ranks)values(%s, %s, 1);', (uID, token))
-			print(token)
-			app_db.commit()
-			print('commited')
-			return make_response(jsonify( { 'Token': token } ), 200)
-"""
+	#		token = generate_token(32)
+	#		app_cursor.execute('INSERT INTO tokens(uID, token, ranks)values(%s, %s, 1);', (uID, token))
+	#		print(token)
+	#		app_db.commit()
+	#		print('commited')
+	#		return make_response(jsonify( { 'Token': token } ), 200)
+
 	@app.route("/user-test/<int:id>")
 	def get_user(id):
 	    db = get_db_connection()
