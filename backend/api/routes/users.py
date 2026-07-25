@@ -1,6 +1,7 @@
 from flask import jsonify 
 from db import get_db_connection
 from utils import generate_token
+from flask import request
 ##	from db import auth_db
 
 def register_routes(app):
@@ -14,16 +15,17 @@ def register_routes(app):
 			"token": token,
 		})
 
-	"""
-	@app.route("/login")
+	@app.route("/login", methods=["POST"])
 	def login():
-		data = response.get_json()
+		data = request.get_json()
 
 		email = data["email"]
 		password = data["password"]
 
 		print(email + '\n' + password)
 
+		return {"success": True}
+"""
 		## My solution ##
 
 		## auth_cursor is the auth db, app_cursor is app db
