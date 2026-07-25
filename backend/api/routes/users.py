@@ -38,26 +38,32 @@ def register_routes(app):
 		)
 		user = cursor.fetchone()
 
-		if user is None:
+		if user is not None:
+
+			# Generate Token
+			token = generate_token(32)
+			cursor.execute(
+				"INSERT INTO auth (user_id, token, user_rank) VALUES (%s, %s, 1)",
+				(
+					user["id"],
+					token
+				)
+			)
+			db.commit()
 			return {
-				"success": False,
-				"message": "invalid email or password"
+				"success": True,
+				"user ID": user["id"],
+				"token": token,	
 			}, 401
 
-		user_id = user["id"]
+		# user_id = user["id"]
 
 		return jsonify({
-			"success": True,
-			"user ID": user_id,
-			"token": "test-token",
-		})
+			"success": False,
+			"message": "invalid email or password"
+		}, 401)
 
 	#	## My solution ##
-
-		## auth_cursor is the auth db, app_cursor is app db
-	#	auth_cursor.execute('SELECT userID FROM users WHERE uUsername=%s and uPassword=%s;', (email, password))
-	#	uID = auth_cursor.fetchone()[]
-	#	print(uID)
 
 	#	if uID is not None:
 			## Generate token
