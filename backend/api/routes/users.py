@@ -63,17 +63,6 @@ def register_routes(app):
 			"message": "invalid email or password"
 		}, 401)
 
-	#	## My solution ##
-
-	#	if uID is not None:
-			## Generate token
-	#		token = generate_token(32)
-	#		app_cursor.execute('INSERT INTO tokens(uID, token, ranks)values(%s, %s, 1);', (uID, token))
-	#		print(token)
-	#		app_db.commit()
-	#		print('commited')
-	#		return make_response(jsonify( { 'Token': token } ), 200)
-
 	@app.route("/user-test/<int:id>")
 	def get_user(id):
 	    db = get_db_connection()

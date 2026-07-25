@@ -53,7 +53,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
             // This is the token we get back from the server --
             const token = response.data.token;
             console.log("Token:", token)
-            
+
             await AsyncStorage.setItem("token", token);
 
             // Set...
@@ -68,10 +68,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
     };
 
-    const logOut = () => {
+    const logOut = async () => {
+        await AsyncStorage.removeItem("token");
         setIsLoggedIn(false)
-        storeAuthState({ isLoggedIn: false });
-        router.replace("/login");
+        router.replace("/login")
     }
 
     useEffect(() => {
