@@ -26,6 +26,7 @@ def register_routes(app):
 
 		return jsonify({
 			"success": True,
+			"token": "test-token",
 		})
 
 	#	## My solution ##
