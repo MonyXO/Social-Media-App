@@ -37,11 +37,18 @@ def register_routes(app):
 			)
 		)
 		user = cursor.fetchone()
-		print(user)
+
+		if user is None:
+			return {
+				"success": False,
+				"message": "invalid email or password"
+			}, 401
+
+		user_id = user["id"]
 
 		return jsonify({
 			"success": True,
-			"user ID": user,
+			"user ID": user_id,
 			"token": "test-token",
 		})
 
