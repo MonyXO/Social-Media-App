@@ -50,11 +50,11 @@ def register_routes(app):
 				)
 			)
 			db.commit()
-			return {
+			return jsonify({
 				"success": True,
 				"user ID": user["id"],
 				"token": token,	
-			}, 200
+			}), 200
 
 		# user_id = user["id"]
 

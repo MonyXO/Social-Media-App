@@ -48,10 +48,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 password,
             });
 
-            console.log(response.data)
+            console.log("Response:", response.data)
 
             // This is the token we get back from the server --
             const token = response.data.token;
+            console.log("Token:", token)
+            
             await AsyncStorage.setItem("token", token);
 
             // Set...
