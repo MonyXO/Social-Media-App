@@ -2,4 +2,4 @@ Backend ReadMe
 
 Structure of Backend:
     - /api
-    - /database (maybe)
+    - /database (maybe) This would be the schema
