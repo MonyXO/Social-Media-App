@@ -91,9 +91,36 @@ export function AuthProvider({ children }: PropsWithChildren) {
             // simulate a delay
             await new Promise((res) => setTimeout(() => res(null), 1000));
             try {
+
+                // Grabbing the key from Async Storage - on the phone
                 const value = await AsyncStorage.getItem("token");
+                // If there is a value - if there is something in Async Storage
                 if (value) {
-                    setIsLoggedIn(true);
+                    // Send the value to the Flask API to verify - will get a response from the server
+                    const response = await api.get("/session", {
+                        headers: {
+                            Authorization: `Bearer ${value}`,
+                        },
+                    })
+
+                    // Just logging the response
+                    console.log("Response:", response.data)
+                    
+                    // Retrieving true or false
+                    const isVerified = response.data.success
+
+                    // Set if the user is logged in
+                    if (isVerified) {
+                        await AsyncStorage.setItem(
+                            "token",
+                            response.data.token
+                        );
+                        setIsLoggedIn(true);
+                        router.replace("/")
+                    } else {
+                        setIsLoggedIn(false)
+                    }
+
                 } else {
                     setIsLoggedIn(false);
                 }

@@ -102,6 +102,53 @@ def register_routes(app):
 			"message": "Logged out successfully"
 		})
 
+	@app.route("/session", methods=["GET"])
+	def session():
+		# Recieve data from the frontend - in this case, the token from retrieved from the phones Async Storage
+		# data = response.get_json()
+		# Can probably use auth header just like in logout
+		auth_header = request.headers.get("Authorization")
+
+		# Check to make sure it's a valid response - Will return false if it is invalid
+		if not auth_header or not auth_header.startswith("Bearer "):
+			return jsonify({
+				"success": False,
+				"message": "Missing token"
+			}), 401
+
+		# Valid response recieved - Check it with database		
+		token = auth_header.split(" ", 1)[1]
+
+		db = get_db_connection()
+		cursor = db.cursor(dictionary=True)
+
+		cursor.execute(
+			"SELECT user_id, user_rank FROM auth WHERE token = %s",
+			(
+				token,
+			)
+		)
+
+		# Get credentials and close database connections
+		creds = cursor.fetchone()
+
+		cursor.close()
+		db.close()
+
+		# Return credential info to the front end
+		if creds is not None:
+			return jsonify({
+				"success": True,
+				"user": creds["user_id"],
+				"rank": creds["user_rank"],
+				"token": token
+			})
+		return jsonify({
+				"success": False,
+				"message": "Invalid token"
+			}), 401
+
+
 	@app.route("/user-test/<int:id>")
 	def get_user(id):
 	    db = get_db_connection()
