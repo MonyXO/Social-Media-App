@@ -124,9 +124,15 @@ export function AuthProvider({ children }: PropsWithChildren) {
                 } else {
                     setIsLoggedIn(false);
                 }
-            } catch (error) {
-                console.log("Error fetching from storage", error);
-                setIsLoggedIn(false);
+            } catch (error: any) {
+                // Error expo will show
+                if (error.response?.status === 401) {
+                    console.log("Token expired or invalid")
+                    await AsyncStorage.removeItem("token")
+                    setIsLoggedIn(false)
+                } else {
+                    console.log(error)
+                }
             }
             setIsReady(true);
         }
