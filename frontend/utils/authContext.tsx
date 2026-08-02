@@ -50,6 +50,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
             console.log("Response:", response.data)
 
+            // Check to see if valid token is returned
+            if (!response.data.success) {
+                return false;
+            }
+
             // This is the token we get back from the server --
             const token = response.data.token;
             console.log("Token:", token)
