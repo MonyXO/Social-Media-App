@@ -1,0 +1,52 @@
+services:
+
+  mysql:
+    image: mysql:8.4
+    container_name: social-media-mysql
+    restart: unless-stopped
+
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+    networks:
+      - social-media-network
+
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  flask:
+    build:
+      context: ./backend/api
+
+    container_name: social-media-api
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+    networks:
+      - social-media-network
+
+    ports:
+      - "127.0.0.1:5000:5000"
+
+networks:
+  social-media-network:
+
+volumes:
+  mysql_data:
+
