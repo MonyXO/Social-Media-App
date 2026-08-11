@@ -1,11 +1,13 @@
 import { AuthContext } from "@/utils/authContext";
 import { useState, useContext } from "react";
 import { Alert, Button, Text, TextInput, View } from "react-native";
+import { useRouter } from "expo-router";
 
 
 export default function LoginScreen() {
 
     const authContext = useContext(AuthContext);
+    const router = useRouter();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -38,11 +40,15 @@ export default function LoginScreen() {
                 secureTextEntry
                 style={{
                     borderWidth: 1,
-                    marginBottom: 20,
+                    marginBottom: 10,
                     padding: 10,
                 }}
             />
             <Button title="Log In!" onPress={handleLogin}/>
+            <View>
+                <Text style={{ fontSize: 18, textAlign: "center" }}>Want to Sign up?</Text>
+                <Button title="Create Account" onPress={() => router.push("/signup")}/>
+            </View>
         </View>
     );
 }

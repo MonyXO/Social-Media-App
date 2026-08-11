@@ -123,10 +123,13 @@ def register_routes(app):
 		cursor = db.cursor(dictionary=True)
 
 		cursor.execute(
-			"SELECT user_id, user_rank FROM auth WHERE token = %s",
-			(
-				token,
-			)
+			"""
+			SELECT user_id, user_rank 
+			FROM auth 
+			WHERE token = %s
+				AND expires_at > NOW()
+			""",
+			(token,)
 		)
 
 		# Get credentials and close database connections
@@ -140,13 +143,12 @@ def register_routes(app):
 			return jsonify({
 				"success": True,
 				"user": creds["user_id"],
-				"rank": creds["user_rank"],
-				"token": token
+				"rank": creds["user_rank"]
 			})
 		return jsonify({
 				"success": False,
 				"message": "Invalid token"
-			}), 401
+		}), 401
 
 
 	@app.route("/user-test/<int:id>")
