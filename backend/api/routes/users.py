@@ -2,6 +2,7 @@ from flask import jsonify
 from db import get_db_connection
 from utils import generate_token
 from flask import request
+import bcrypt
 ##	from db import auth_db
 
 def register_routes(app):
@@ -30,15 +31,15 @@ def register_routes(app):
 		db = get_db_connection()
 		cursor = db.cursor(dictionary=True)
 		cursor.execute(
-			"SELECT id FROM users WHERE email = %s AND password_hash = %s",
-			(
-				email, 
-				password
-			)
+			"SELECT id, password_hash FROM users WHERE email = %s",
+			(email,)
 		)
 		user = cursor.fetchone()
 
-		if user is not None:
+		if user is not None and bcrypt.checkpw(
+			password.encode("utf-8"),
+			user["password_hash"].encode("utf-8")
+		):
 
 			cursor.execute(
 				"DELETE FROM auth WHERE user_id = %s",
@@ -65,7 +66,8 @@ def register_routes(app):
 				"token": token,	
 			}), 200
 
-		# user_id = user["id"]
+		cursor.close()
+		db.close()
 
 		return jsonify({
 			"success": False,
