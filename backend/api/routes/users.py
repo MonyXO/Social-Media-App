@@ -72,7 +72,74 @@ def register_routes(app):
 		return jsonify({
 			"success": False,
 			"message": "invalid email or password"
-		}, 401)
+		}), 401
+
+	@app.route("/signup", methods=["POST"])
+	def signup():
+
+		# Recieve data from front end - In this case the email and password
+		data = request.get_json()
+
+		# Store data in variables
+		first_name = data["firstName"]
+		last_name = data["lastName"]
+		email = data["email"]
+		password = data["password"]
+
+		# Open a database connection
+		db = get_db_connection()
+		cursor = db.cursor(dictionary=True)
+
+		# Check if email is already registered
+		cursor.execute(
+			"SELECT id FROM users WHERE email = %s",
+			(email,)
+		)
+
+		user = cursor.fetchone()
+
+		if user is not None:
+			cursor.close()
+			db.close()
+
+			return jsonify({
+				"success" : False,
+				"message" : "Email already registered"
+			}), 409
+
+		# Hash password
+		password_hash = bcrypt.hashpw(
+			password.encode("utf-8"),
+			bcrypt.gensalt()
+		).decode("utf-8")
+
+		# Create user
+		cursor.execute(
+			"""
+			INSERT INTO users
+				(first_name, last_name, email, password_hash)
+			VALUES
+				(%s, %s, %s, %s)
+			""",
+			(
+				first_name,
+				last_name,
+				email,
+				password_hash
+			)
+		)
+
+		db.commit()
+
+		user_id = cursor.lastrowid
+
+		cursor.close()
+		db.close()
+
+		return jsonify({
+			"success": True,
+			"user ID": user_id
+		}), 201
 
 	@app.route("/logout", methods=["POST"])
 	def logout():
