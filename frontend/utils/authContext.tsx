@@ -87,10 +87,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
     };
 
+    // This is exectuded on app startup.
     useEffect(() => {
         const getAuthFromStorage = async () => {
-            // simulate a delay - NO NEED
-            // await new Promise((res) => setTimeout(() => res(null), 1000));
             try {
 
                 // Grabbing the key from Async Storage - on the phone

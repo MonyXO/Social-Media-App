@@ -219,6 +219,52 @@ def register_routes(app):
 				"message": "Invalid token"
 		}), 401
 
+	@app.route("/profile", methods=["GET"])
+	def profile():
+		# Read the bearer token sent by the app with its profile request.
+		auth_header = request.headers.get("Authorization")
+		# Reject requests that do not include a bearer token.
+		if not auth_header or not auth_header.startswith("Bearer "):
+			return jsonify({
+				"success": False,
+				"message": "Missing token"
+			}), 401
+
+		# Remove the "Bearer " prefix so the token can be matched in the database.
+		token = auth_header.split(" ", 1)[1]
+		db = get_db_connection()
+		cursor = db.cursor(dictionary=True)
+		# Find the account linked to this token, but only if the token has not expired.
+		cursor.execute(
+			"""
+			SELECT users.first_name, users.last_name
+			FROM auth
+			JOIN users ON users.id = auth.user_id
+			WHERE auth.token = %s
+				AND auth.expires_at > NOW()
+			""",
+			(token,)
+		)
+		# Get profile data
+		user = cursor.fetchone()
+		# Close database resources after the lookup is complete.
+		cursor.close()
+		db.close()
+
+		# Reject invalid or expired tokens when no matching account was found.
+		if user is None:
+			return jsonify({
+				"success": False,
+				"message": "Invalid token"
+			}), 401
+
+		# Return only the signed-in user's first and last name to the app.
+		return jsonify({
+			"success": True,
+			"firstName": user["first_name"],
+			"lastName": user["last_name"]
+		})
+
 
 	@app.route("/user-test/<int:id>")
 	def get_user(id):
